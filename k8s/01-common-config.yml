@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-config
+data:
+  HTTP_ERRORS_KEY: "http_errors"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"
+  KAFKA_LOGGING_TOPIC: "logging"
+  MONGO_HOST: "mongo-db"
+  MONGO_PORT: "27017"
+  ENABLE_EUREKA_DISCOVERY: "false"

@@ -1,0 +1,85 @@
+version: '3.4'
+
+x-xxx-common-services-config: &common-services-config
+  restart: always
+
+x-kafka-env: &kafka-env
+  KAFKA_BROKER_ID: 1
+  KAFKA_ADVERTISED_PORT: 9092
+  BROKER_ID_COMMAND: "hostname | cut -d'-' -f2"
+  KAFKA_ZOOKEEPER_CONNECT: "zoo:2181"
+  KAFKA_LISTENERS: INTERNAL://kafka-service:9092,OUTSIDE://kafka-service:9094 # Expose externally kafka to the port 9094. (Local Debugging)
+  KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-service:9092,OUTSIDE://localhost:9094
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+  KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+services:
+
+  mongo-db:
+    image: mongo
+    <<: *common-services-config
+    volumes:
+      - mongodb:/var/lib/mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 12345
+
+  logging-service:
+    extends:
+      service: loggingsystem
+      file: docker-compose-logging.yml
+    depends_on:
+      - mongo-db
+      - kafka-service
+
+  payments-service:
+    extends:
+      service: paymentsmanager
+      file: docker-compose-payment.yml
+    depends_on:
+      - mongo-db
+      - kafka-service
+
+  rentals-service:
+    extends:
+      service: rentalsmanager
+      file: docker-compose-rental.yml
+    depends_on:
+      - kafka-service
+      - mongo-db
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: eureka_service/Dockerfile
+    ports:
+      - "2220:2220" # For debugging purposes.
+    env_file:
+      - commons.env
+    <<: *common-services-config
+
+  gateway:
+    extends:
+      service: gateway
+      file: docker-compose-gateway.yml
+    depends_on:
+      - eureka-server
+    <<: *common-services-config
+
+  zoo:
+    <<: *common-services-config
+    image: library/zookeeper:3.4.13
+    environment:
+      ZOO_MY_ID: 1
+
+  kafka-service:
+    <<: *common-services-config
+    environment: *kafka-env
+    image: wurstmeister/kafka:2.11-2.0.0
+    ports:
+      - "9094:9094" # Expose 9094 externally to debug with python on local machine.
+    depends_on:
+      - zoo
+
+volumes:
+  mongodb:

@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  mongo_db:
+    image: mongo
+    volumes:
+      - mongodb:/var/lib/mongo
+
+  rentalsmanager:
+    build:
+      context: .
+      dockerfile: ./rentals_microservice/Dockerfile
+    ports:
+      - "2223"
+    #  - "2223:2223"
+    restart: always
+    env_file:
+      - rental.env
+      - commons.env
+
+volumes:
+  mongodb:

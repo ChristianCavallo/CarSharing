@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    ports:
+      - "2221:2221"
+    env_file:
+      - commons.env
+      - gateway.env

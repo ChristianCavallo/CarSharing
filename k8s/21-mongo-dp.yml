@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo-db"
+  selector:
+    matchLabels:
+      db: mongo
+  template:
+    metadata:
+      name: mongo-pod
+      labels:
+        db: mongo
+    spec:
+      containers:
+        - image: mongo
+          imagePullPolicy: ""
+          name: mongo-db
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /var/lib/mongo
+              name: mongodb
+          #readinessProbe:
+          #  exec:
+          #    command:
+          #      - mongo
+          #      - --eval
+          #      - "db.adminCommand('ping')"
+          #  initialDelaySeconds: 10
+          #  timeoutSeconds: 5
+          #livenessProbe:
+          #  exec:
+          #    command:
+          #      - mongo
+          #      - --eval
+          #      - "db.adminCommand('ping')"
+          #  initialDelaySeconds: 20
+          #  timeoutSeconds: 5
+      volumes:
+        - name: mongodb
+          persistentVolumeClaim:
+            claimName: mongodb-volume
+

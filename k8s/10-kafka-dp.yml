@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  serviceName: "kafka-service"
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      name: kafka-pod
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafkacnt
+          image: wurstmeister/kafka:2.11-2.0.0
+          imagePullPolicy: ""
+          ports:
+            - containerPort: 9092
+              name: plaintext
+          envFrom:
+            - configMapRef:
+                name: kafka-config

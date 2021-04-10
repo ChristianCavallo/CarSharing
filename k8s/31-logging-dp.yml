@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logging-dp
+spec:
+  selector:
+    matchLabels:
+      service: logging
+  template:
+    metadata:
+      name: logging-pod
+      labels:
+        service: logging
+    spec:
+      containers:
+        - name: logging-cnt
+          image: carsharing_loggingsystem
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2224
+              name: logging-port
+          envFrom:
+            - configMapRef:
+                name: logging-config
+            - configMapRef:
+                name: common-config
+          #readinessProbe:
+          #  httpGet:
+          #    path: /logging/ping
+          #    port: 2224
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #livenessProbe:
+          #  httpGet:
+          #    path: /logging/ping
+          #    port: 2224
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 12
+          #  periodSeconds: 10
+

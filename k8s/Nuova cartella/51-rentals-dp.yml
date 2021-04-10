@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rentals-dp
+spec:
+  selector:
+    matchLabels:
+      service: rentals
+  template:
+    metadata:
+      name: rentals-pod
+      labels:
+        service: rentals
+    spec:
+      containers:
+        - name: rentals-cnt
+          image: carsharing_rentalsmanager
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2223
+              name: rentals-port
+          envFrom:
+            - configMapRef:
+                name: rentals-config
+            - configMapRef:
+                name: common-config
+          #startupProbe:
+          #  httpGet:
+          #    path: /rental/ping
+          #    port: 2223
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /rental/ping
+          #    port: 2223
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+          #livenessProbe:
+          #  httpGet:
+          #    path: /rental/ping
+          #    port: 2223
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+

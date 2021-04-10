@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  mongo_db:
+    image: mongo
+    volumes:
+      - mongodb:/var/lib/mongo
+
+  paymentsmanager:
+    build:
+      context: .
+      dockerfile: ./payments_microservice/Dockerfile
+    #ports:
+    #  - "2222:2222"
+    ports:
+      - "2222"
+    restart: always
+    env_file:
+      - ./payments_microservice/payments.env
+      - commons.env
+
+volumes:
+  mongodb:
+
+

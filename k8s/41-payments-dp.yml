@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-dp
+spec:
+  selector:
+    matchLabels:
+      service: payments
+  template:
+    metadata:
+      name: payments-pod
+      labels:
+        service: payments
+    spec:
+      containers:
+        - name: payments-cnt
+          image: carsharing_paymentsmanager
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2222
+              name: payments-port
+          envFrom:
+            - configMapRef:
+                name: payments-config
+            - configMapRef:
+                name: common-config
+          #startupProbe:
+          #  httpGet:
+          #    path: /payment/ping
+          #    port: 2222
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /payment/ping
+          #    port: 2222
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+          #livenessProbe:
+          #  httpGet:
+          #    path: /payment/ping
+          #    port: 2222
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper-dp
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      name: zookeeper-pod
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - name: zookeper-cnt
+          image: library/zookeeper:3.4.13
+          imagePullPolicy: ""
+          ports:
+            - containerPort: 2181
+              name: zoo-port
+          envFrom:
+            - configMapRef:
+                name: zoo-config

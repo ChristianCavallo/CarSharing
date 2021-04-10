@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logging-config
+data:
+  KAFKA_LOGGING_GROUP: "logs_consumer"
+
+  MONGO_DB: "logs_db"
+
+  LOGGING_SYSTEM_APP_NAME: "logging-service"
+  LOGGING_SYSTEM_APP_PORT: "2224"
+  LOGGING_SYSTEM_API_BASE: "logging"
+
