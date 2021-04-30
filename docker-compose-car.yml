@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 
 services:
   mongo_db:
@@ -6,17 +6,17 @@ services:
     volumes:
       - mongodb:/var/lib/mongo
 
-
-  logging-service:
+  cars-service:
     build:
       context: .
-      dockerfile: ./logging_microservice/Dockerfile
+      dockerfile: ./cars_microservice/Dockerfile
+    #ports:
+    #  - "2227"
+    #  - "2227:2227"
     restart: always
     env_file:
-      - ./logging_microservice/logging.env
+      - car.env
       - commons.env
-    #ports:
-    #  - "2224"
 
 volumes:
   mongodb:

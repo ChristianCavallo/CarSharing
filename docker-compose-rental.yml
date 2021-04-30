@@ -6,12 +6,12 @@ services:
     volumes:
       - mongodb:/var/lib/mongo
 
-  rentalsmanager:
+  rentals-service:
     build:
       context: .
       dockerfile: ./rentals_microservice/Dockerfile
-    ports:
-      - "2223"
+    #ports:
+    #  - "2223"
     #  - "2223:2223"
     restart: always
     env_file:

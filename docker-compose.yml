@@ -24,26 +24,50 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 12345
 
-  logging-service:
+  #logging-service:
+  #  extends:
+  #    service: logging-service
+  #    file: docker-compose-logging.yml
+  #  depends_on:
+  #    - mongo-db
+  #    - kafka-service
+#
+  #payments-service:
+  #  extends:
+  #    service: payments-service
+  #    file: docker-compose-payment.yml
+  #  depends_on:
+  #    - mongo-db
+  #    - kafka-service
+#
+  #rentals-service:
+  #  extends:
+  #    service: rentals-service
+  #    file: docker-compose-rental.yml
+  #  depends_on:
+  #    - kafka-service
+  #    - mongo-db
+#
+  users-service:
     extends:
-      service: loggingsystem
-      file: docker-compose-logging.yml
+      service: users-service
+      file: docker-compose-user.yml
     depends_on:
-      - mongo-db
       - kafka-service
+      - mongo-db
 
-  payments-service:
+  invoices-service:
     extends:
-      service: paymentsmanager
-      file: docker-compose-payment.yml
+      service: invoices-service
+      file: docker-compose-invoice.yml
     depends_on:
-      - mongo-db
       - kafka-service
+      - mongo-db
 
-  rentals-service:
+  cars-service:
     extends:
-      service: rentalsmanager
-      file: docker-compose-rental.yml
+      service: cars-service
+      file: docker-compose-car.yml
     depends_on:
       - kafka-service
       - mongo-db

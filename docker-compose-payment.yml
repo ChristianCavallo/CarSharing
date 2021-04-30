@@ -6,7 +6,7 @@ services:
     volumes:
       - mongodb:/var/lib/mongo
 
-  paymentsmanager:
+  payments-service:
     build:
       context: .
       dockerfile: ./payments_microservice/Dockerfile
