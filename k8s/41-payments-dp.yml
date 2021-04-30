@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: payments-cnt
-          image: carsharing_paymentsmanager
+          image: carsharing_payments-service
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2222

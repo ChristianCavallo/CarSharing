@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rentals-cnt
-          image: carsharing_rentalsmanager
+          image: carsharing_rentals-service
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2223

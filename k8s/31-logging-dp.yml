@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: logging-cnt
-          image: carsharing_loggingsystem
+          image: carsharing_logging-service
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2224
