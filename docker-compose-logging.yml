@@ -7,7 +7,7 @@ services:
       - mongodb:/var/lib/mongo
 
 
-  loggingsystem:
+  logging-service:
     build:
       context: .
       dockerfile: ./logging_microservice/Dockerfile
@@ -15,8 +15,8 @@ services:
     env_file:
       - ./logging_microservice/logging.env
       - commons.env
-    ports:
-      - "2224"
+    #ports:
+      #- "2224"
 
 volumes:
   mongodb:

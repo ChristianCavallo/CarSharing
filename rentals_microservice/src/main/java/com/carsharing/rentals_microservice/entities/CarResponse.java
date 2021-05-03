@@ -11,4 +11,5 @@ import java.io.Serializable;
 public class CarResponse implements Serializable {
     private String car_id;
     private Boolean success;
+    private String message;
 }

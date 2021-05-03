@@ -12,4 +12,8 @@ import java.io.Serializable;
 public class CarRequest implements Serializable {
     private String car_id;
     private String operation;
+    private String user_id;
+    private String rental_id;
+    private Double lat;
+    private Double lon;
 }

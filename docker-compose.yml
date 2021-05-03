@@ -26,7 +26,7 @@ services:
 
   logging-service:
     extends:
-      service: loggingsystem
+      service: logging-service
       file: docker-compose-logging.yml
     depends_on:
       - mongo-db
@@ -34,7 +34,7 @@ services:
 
   payments-service:
     extends:
-      service: paymentsmanager
+      service: payments-service
       file: docker-compose-payment.yml
     depends_on:
       - mongo-db
@@ -42,7 +42,7 @@ services:
 
   rentals-service:
     extends:
-      service: rentalsmanager
+      service: rentals-service
       file: docker-compose-rental.yml
     depends_on:
       - kafka-service

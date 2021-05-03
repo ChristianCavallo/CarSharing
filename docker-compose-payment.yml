@@ -6,14 +6,13 @@ services:
     volumes:
       - mongodb:/var/lib/mongo
 
-  paymentsmanager:
+  payments-service:
     build:
       context: .
       dockerfile: ./payments_microservice/Dockerfile
     #ports:
     #  - "2222:2222"
-    ports:
-      - "2222"
+    #  - "2222"
     restart: always
     env_file:
       - ./payments_microservice/payments.env

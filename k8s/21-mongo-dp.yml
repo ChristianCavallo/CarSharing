@@ -17,27 +17,44 @@ spec:
         - image: mongo
           imagePullPolicy: ""
           name: mongo-db
+          command:
+            - /bin/bash
+            - -c
+            - source docker-entrypoint.sh mongod
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           ports:
             - containerPort: 27017
           volumeMounts:
             - mountPath: /var/lib/mongo
               name: mongodb
-          #readinessProbe:
-          #  exec:
-          #    command:
-          #      - mongo
-          #      - --eval
-          #      - "db.adminCommand('ping')"
-          #  initialDelaySeconds: 10
-          #  timeoutSeconds: 5
-          #livenessProbe:
-          #  exec:
-          #    command:
-          #      - mongo
-          #      - --eval
-          #      - "db.adminCommand('ping')"
-          #  initialDelaySeconds: 20
-          #  timeoutSeconds: 5
+
+          startupProbe:
+            exec:
+              command:
+                - mongo
+                - --eval
+                - "db.adminCommand('ping')"
+            failureThreshold: 10
+            periodSeconds: 30
+          livenessProbe:
+            exec:
+              command:
+                - mongo
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 30
+            failureThreshold: 10
+            periodSeconds: 30
       volumes:
         - name: mongodb
           persistentVolumeClaim:

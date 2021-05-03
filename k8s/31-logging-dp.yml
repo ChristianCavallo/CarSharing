@@ -19,23 +19,34 @@ spec:
           ports:
             - containerPort: 2224
               name: logging-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: logging-config
             - configMapRef:
                 name: common-config
-          #readinessProbe:
-          #  httpGet:
-          #    path: /logging/ping
-          #    port: 2224
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 30
-          #  periodSeconds: 10
-          #livenessProbe:
-          #  httpGet:
-          #    path: /logging/ping
-          #    port: 2224
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 12
-          #  periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /logging/ping
+              port: 2224
+            initialDelaySeconds: 20
+            failureThreshold: 100
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /logging/ping
+              port: 2224
+            initialDelaySeconds: 60
+            failureThreshold: 100
+            periodSeconds: 15
 

@@ -95,7 +95,7 @@ public class RentalController {
 
     @GetMapping(path = "/{id}")
     public @ResponseBody String getRentalById(@PathVariable String id,
-                                              @RequestHeader("X-User-ID") Integer user_id,
+                                              @RequestHeader("X-User-ID") String user_id,
                                               HttpServletRequest servletRequest){
 
         Optional<Rental> r = repository.findById(id);
@@ -110,7 +110,7 @@ public class RentalController {
             return new Gson().toJson(r.get());
         }
 
-        sendHttpError(servletRequest,"Unathorized access to rental's data");
+        sendHttpError(servletRequest,"Unauthorized access to rental's data");
         throw new ResponseStatusException(
                 HttpStatus.FORBIDDEN, "You don't own this resource."
         );
@@ -119,14 +119,18 @@ public class RentalController {
 
     @PostMapping(path = "/start")
     public @ResponseBody String startRental(@RequestParam String car_id,
+                                            @RequestParam Double lat,
+                                            @RequestParam Double lon,
                                             @RequestHeader("X-User-ID") String user_id,
                                             HttpServletRequest servletRequest) {
 
         CarRequest r = new CarRequest();
         r.setCar_id(car_id);
         r.setOperation("unlock");
+        r.setLat(lat);
+        r.setLon(lon);
 
-        CarResponse c = null;
+        CarResponse c;
         try{
             c = sendCarRequest(r);
         } catch (Exception e){
@@ -134,7 +138,7 @@ public class RentalController {
             e.printStackTrace(new PrintWriter(sw));
             sendHttpError(servletRequest, sw.toString());
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Vehicle unavailable."
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Service communication error."
             );
         }
 
@@ -143,9 +147,10 @@ public class RentalController {
             message.put("timestamp", Instant.now().getEpochSecond());
             message.put("user_id", user_id);
             message.put("car_id", car_id);
+            message.put("message", c.getMessage());
             kafkaTemplate.send(logging_topic, rental_car_not_available_key, new Gson().toJson(message));
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Vehicle unavailable."
+                    HttpStatus.INTERNAL_SERVER_ERROR, c.getMessage()
             );
         }
 
@@ -166,13 +171,14 @@ public class RentalController {
 
     @PostMapping(path = "/stop")
     public @ResponseBody String stopRental(@RequestParam String rental_id,
+                                           @RequestParam Double lat,
+                                           @RequestParam Double lon,
                                            @RequestHeader("X-User-ID") String user_id,
                                            HttpServletRequest servletRequest) {
 
         // Small Security Checks
         // 1. is a valid rental? If yes, do you own it?
         Optional<Rental> r = repository.findById(rental_id);
-        System.out.println(rental_id);
         if(!r.isPresent()){
             sendHttpError(servletRequest, 404);
             throw new ResponseStatusException(
@@ -181,7 +187,7 @@ public class RentalController {
         }
 
         if(!r.get().getUserId().equals(user_id) && r.get().getUserId().equals(admin_user_id)){
-            sendHttpError(servletRequest,"Unathorized access to rental's data");
+            sendHttpError(servletRequest,"Unauthorized access to rental's data");
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "You don't own this resource."
             );
@@ -197,8 +203,10 @@ public class RentalController {
         CarRequest carRequest = new CarRequest();
         carRequest.setCar_id(r.get().getCar_id());
         carRequest.setOperation("lock");
+        carRequest.setLon(lon);
+        carRequest.setLat(lat);
 
-        CarResponse c = null;
+        CarResponse c;
         try{
             c = sendCarRequest(carRequest);
         } catch (Exception e){
@@ -206,7 +214,7 @@ public class RentalController {
             e.printStackTrace(new PrintWriter(sw));
             sendHttpError(servletRequest, sw.toString());
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Vehicle unavailable."
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Service communication error."
             );
         }
 
@@ -232,7 +240,7 @@ public class RentalController {
             l.setStopTimestamp(Instant.now().getEpochSecond());
         }
         l.setStatus(RentalStatus.COMPLETED);
-        Long diff = l.getStopTimestamp() - l.getStartTimestamp();
+        long diff = l.getStopTimestamp() - l.getStartTimestamp();
         Double to_pay = Math.round(diff / 60d * l.getPrice_per_minute() *100) / 100d;
         l.setAmount_to_pay(to_pay);
 
@@ -245,7 +253,7 @@ public class RentalController {
 
 
     // GET /rentals?page=0&size=10
-    @GetMapping(path="/items")
+    @GetMapping(path="/rentals")
     public @ResponseBody String getRentalsWithPagination(
             @RequestHeader("X-User-ID") String user_id,
             @RequestParam(defaultValue = "0") int page,
@@ -253,9 +261,8 @@ public class RentalController {
             HttpServletRequest request) {
 
         try {
-
             Pageable paging = PageRequest.of(page, per_page);
-            Page<Rental> rentalsPage = null;
+            Page<Rental> rentalsPage;
             if (user_id.equals(admin_user_id)){
                 rentalsPage = repository.findAll(paging);
             } else {
