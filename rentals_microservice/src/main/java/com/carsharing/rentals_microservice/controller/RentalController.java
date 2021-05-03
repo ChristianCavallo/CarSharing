@@ -1,11 +1,12 @@
 package com.carsharing.rentals_microservice.controller;
 
 import com.carsharing.rentals_microservice.data.RentalRepository;
-import com.carsharing.rentals_microservice.entities.CarRequest;
-import com.carsharing.rentals_microservice.entities.CarResponse;
 import com.carsharing.rentals_microservice.entities.Rental;
 import com.carsharing.rentals_microservice.entities.RentalStatus;
 import com.google.gson.Gson;
+import entities.car.CarOperation;
+import entities.car.CarRequest;
+import entities.car.CarResponse;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,9 +127,7 @@ public class RentalController {
 
         CarRequest r = new CarRequest();
         r.setCar_id(car_id);
-        r.setOperation("unlock");
-        r.setLat(lat);
-        r.setLon(lon);
+        r.setOperation(CarOperation.UNLOCK);
 
         CarResponse c;
         try{
@@ -202,9 +201,7 @@ public class RentalController {
 
         CarRequest carRequest = new CarRequest();
         carRequest.setCar_id(r.get().getCar_id());
-        carRequest.setOperation("lock");
-        carRequest.setLon(lon);
-        carRequest.setLat(lat);
+        carRequest.setOperation(CarOperation.LOCK);
 
         CarResponse c;
         try{

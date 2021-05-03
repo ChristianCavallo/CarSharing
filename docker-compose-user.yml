@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 
 services:
   mongo_db:
@@ -6,17 +6,17 @@ services:
     volumes:
       - mongodb:/var/lib/mongo
 
-
-  logging-service:
+  users-service:
     build:
       context: .
-      dockerfile: ./logging_microservice/Dockerfile
+      dockerfile: ./users_microservice/Dockerfile
+    #ports:
+    #  - "2225"
+    #  - "2225:2225"
     restart: always
     env_file:
-      - ./logging_microservice/logging.env
+      - user.env
       - commons.env
-    #ports:
-    #  - "2224"
 
 volumes:
   mongodb:
