@@ -42,7 +42,7 @@ public class kafkaPaymentListener {
     @Value("${kafka_rental_payment_failure_key}")
     private String payment_failure_key;
 
-    @KafkaListener(topics = "${kafka_payment_topic}", groupId = "${spring.application.name}")
+    @KafkaListener(topics = "${kafka_invoice_topic}", groupId = "${spring.application.name}")
     private void consumePaymentTopic(ConsumerRecord<String, String> data) {
         if (data.key().equals(rental_paid_key)) {
             try {
@@ -53,7 +53,7 @@ public class kafkaPaymentListener {
                 String rental_id = m.get("rental_id").toString();
                 String user_id = m.get("user_id").toString();
 
-                Double amount_paid = Double.parseDouble(m.get("mc_gross").toString());
+                Double amount_paid = Double.parseDouble(m.get("amount_paid").toString());
 
                 Optional<Invoice> i = service.GetInvoice(rental_id, user_id, amount_paid);
 
@@ -89,7 +89,10 @@ public class kafkaPaymentListener {
             }
 
         }
+    }
 
+    @KafkaListener(topics = "${kafka_logging_topic}", groupId = "${spring.application.name}")
+    private void consumeErrorPaymentTopic(ConsumerRecord<String, String> data) {
         if (data.key().equals(payment_failure_key)) {
             try {
                 Type type = new TypeToken<Map<String, String>>() {
@@ -119,5 +122,4 @@ public class kafkaPaymentListener {
             }
         }
     }
-
 }

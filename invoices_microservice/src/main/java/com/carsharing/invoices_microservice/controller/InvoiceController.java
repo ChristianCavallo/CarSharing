@@ -54,10 +54,6 @@ public class InvoiceController {
         kafkaTemplate.send(logging_topic, http_errors_key, new Gson().toJson(message));
     }
 
-    /*GET /invoices/{id} : Risponde con la rappresentazione Json della fattura con id {id} se lo user id
-    della fattura è uguale a quello fornito o è 0. Altrimenti 404 (se la fattura non esiste o non è associata
-    allo user id fornito)
-    */
     @GetMapping(path = "/invoices/{id}")
     private @ResponseBody
     String getInvoice(@PathVariable String id, @RequestHeader("X-User-ID") String user_id, HttpServletRequest servletRequest) {
@@ -82,11 +78,6 @@ public class InvoiceController {
     }
 
 
-    //GET /invoices/id/{id}.....
-    /*GET /invoices/ : Risponde con la rappresentazione Json dell'array delle fatture associate
-    allo user id fornito o di tutti gli utenti se lo user id è 0. Gestire anche la "paginazione".
-    GET /invoices?per_page_10&page=2 indica la pag. 2 delle fatture a 10 a 10,ovvero l'array delle
-    fatture con id da 10 a 20.*/
     @GetMapping(path = "/invoices")
     public @ResponseBody
     String getUserWithPagination(@RequestHeader("X-User-ID") String user_id,

@@ -45,16 +45,16 @@ public class KafkaRentalListener {
                 }.getType();
                 Map<String, Object> m = new Gson().fromJson(data.value(), type);
 
-                String rental_id = m.get("rental_id").toString();
-                String user_id = m.get("user_id").toString();
+                String rental_id = m.get("id").toString();
+                String user_id = m.get("userId").toString();
                 String car_id = m.get("car_id").toString();
 
-                Long start_timestamp = Long.parseLong(m.get("start_timestamp").toString());
-                Long end_timestamp = Long.parseLong(m.get("end_timestamp").toString());
+                Long start_timestamp = Long.parseLong(m.get("startTimestamp").toString());
+                Long end_timestamp = Long.parseLong(m.get("stopTimestamp").toString());
                 Date start_d = new Date(start_timestamp * 1000);
                 Date end_d = new Date(end_timestamp * 1000);
 
-                Double totalAmount = Double.parseDouble(m.get("totalAmount").toString());
+                Double totalAmount = Double.parseDouble(m.get("amount_to_pay").toString());
                 Double price_per_minute = Double.parseDouble(m.get("price_per_minute").toString());
 
                 Invoice i = new Invoice();

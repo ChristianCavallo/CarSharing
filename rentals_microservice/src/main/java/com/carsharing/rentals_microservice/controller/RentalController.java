@@ -1,6 +1,7 @@
 package com.carsharing.rentals_microservice.controller;
 
 import com.carsharing.rentals_microservice.data.RentalRepository;
+
 import com.carsharing.rentals_microservice.entities.Rental;
 import com.carsharing.rentals_microservice.entities.RentalStatus;
 import com.google.gson.Gson;
@@ -120,13 +121,17 @@ public class RentalController {
 
     @PostMapping(path = "/start")
     public @ResponseBody String startRental(@RequestParam String car_id,
+                                            @RequestParam String code,
                                             @RequestParam Double lat,
                                             @RequestParam Double lon,
                                             @RequestHeader("X-User-ID") String user_id,
                                             HttpServletRequest servletRequest) {
 
         CarRequest r = new CarRequest();
+        r.setLat(lat);
+        r.setLon(lon);
         r.setCar_id(car_id);
+        r.setCarCode(code);
         r.setOperation(CarOperation.UNLOCK);
 
         CarResponse c;
@@ -170,6 +175,7 @@ public class RentalController {
 
     @PostMapping(path = "/stop")
     public @ResponseBody String stopRental(@RequestParam String rental_id,
+                                           @RequestParam String code,
                                            @RequestParam Double lat,
                                            @RequestParam Double lon,
                                            @RequestHeader("X-User-ID") String user_id,
@@ -200,6 +206,9 @@ public class RentalController {
         }
 
         CarRequest carRequest = new CarRequest();
+        carRequest.setCarCode(code);
+        carRequest.setLat(lat);
+        carRequest.setLon(lon);
         carRequest.setCar_id(r.get().getCar_id());
         carRequest.setOperation(CarOperation.LOCK);
 

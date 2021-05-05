@@ -142,6 +142,7 @@ public class PaymentController {
         message.put("currency", p.get().getCurrency());
         message.put("payer_email", p.get().getPayer_email());
         message.put("timestamp", Instant.now().getEpochSecond());
+
         kafkaTemplate.send(invoice_topic, rental_paid_key, new Gson().toJson(message));
 
         System.out.println("Payment updated: " + p.get().toString());
@@ -149,8 +150,8 @@ public class PaymentController {
     }
 
     @GetMapping(path = "/transactions")
-    public @ResponseBody String getPaymentsByTimestamps(@RequestParam Long fromTimestamp,
-                                                       @RequestParam Long endTimestamp,
+    public @ResponseBody String getPaymentsByTimestamps(@RequestParam(defaultValue = "0") Long fromTimestamp,
+                                                       @RequestParam(defaultValue = "9999999999") Long endTimestamp,
                                                         @RequestHeader("X-User-ID") String user_id,
                                                        HttpServletRequest servletRequest){
 

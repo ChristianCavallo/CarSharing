@@ -80,7 +80,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic userTopic() {
+    public NewTopic invoiceTopic() {
         return TopicBuilder.name(invoice_topic)
                 .partitions(10)
                 .build();

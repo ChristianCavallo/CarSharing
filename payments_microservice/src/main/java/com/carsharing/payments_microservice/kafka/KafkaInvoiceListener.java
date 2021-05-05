@@ -29,8 +29,8 @@ public class KafkaInvoiceListener {
                 Type type = new TypeToken<Map<String, String>>(){}.getType();
                 Map<String, Object> m = new Gson().fromJson(data.value(), type);
 
-                String rental_id = m.get("rental_id").toString();
-                String user_id = m.get("user_id").toString();
+                String rental_id = m.get("rentalId").toString();
+                String user_id = m.get("userId").toString();
                 Double amount = Double.parseDouble(m.get("totalAmount").toString());
 
                 service.CreatePayment(rental_id, user_id, amount);

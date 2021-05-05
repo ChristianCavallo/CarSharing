@@ -1,4 +1,4 @@
-package com.carsharing.rentals_microservice.entities;
+package entities.car;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

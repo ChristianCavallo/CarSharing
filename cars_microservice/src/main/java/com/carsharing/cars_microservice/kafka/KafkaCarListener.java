@@ -68,8 +68,6 @@ public class KafkaCarListener {
         CarRequest request = new Gson().fromJson(data, CarRequest.class);
         CarResponse response = service.SwitchCarStatus(request);
 
-        System.out.println(response.toString());
-
         if (response.getSuccess()) {
             String key = request.getOperation() == CarOperation.LOCK ? car_locked : car_unlocked;
 
