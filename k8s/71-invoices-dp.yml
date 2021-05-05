@@ -18,7 +18,18 @@ spec:
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2226
-              name: invoices-api-port
+              name: invoices-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: invoices-config

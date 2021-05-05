@@ -30,6 +30,9 @@ public class kafkaPaymentListener {
     @Value("${kafka_logging_topic}")
     private String logging_topic;
 
+    @Value("${spring.application.name}")
+    private String service_name;
+
     //kafka_rental_paid_key=rental_paid
     @Value("${kafka_rental_paid_key}")
     private String rental_paid_key;
@@ -41,6 +44,15 @@ public class kafkaPaymentListener {
     //kafka_rental_payment_failure_key=rental_payment_failure
     @Value("${kafka_rental_payment_failure_key}")
     private String payment_failure_key;
+
+    private void SendMessageToLogging(String key, String u, String r){
+        Map<String, Object> errorInv = new HashMap<>();
+        errorInv.put("user_id", u);
+        errorInv.put("rental_id", r);
+        errorInv.put("timestamp", Instant.now().getEpochSecond());
+        errorInv.put("service", service_name);
+        kafkaTemplate.send(logging_topic, invoice_unavailable_key, new Gson().toJson(errorInv));
+    }
 
     @KafkaListener(topics = "${kafka_invoice_topic}", groupId = "${spring.application.name}")
     private void consumePaymentTopic(ConsumerRecord<String, String> data) {
@@ -58,11 +70,7 @@ public class kafkaPaymentListener {
                 Optional<Invoice> i = service.GetInvoice(rental_id, user_id, amount_paid);
 
                 if (!i.isPresent()) {
-                    Map<String, Object> errorInv = new HashMap<>();
-                    errorInv.put("user_id", user_id);
-                    errorInv.put("rental_id", rental_id);
-                    errorInv.put("timestamp", Instant.now().getEpochSecond());
-                    kafkaTemplate.send(logging_topic, invoice_unavailable_key, new Gson().toJson(errorInv));
+                    SendMessageToLogging(invoice_unavailable_key, user_id, rental_id);
                     return;
                 }
 
@@ -109,11 +117,7 @@ public class kafkaPaymentListener {
                 if (i.isPresent()) {
                     service.UpdateInvoiceStatus(i.get(), InvoiceStatus.ABORT);
                 } else {
-                    Map<String, Object> errorInv = new HashMap<>();
-                    errorInv.put("user_id", user_id);
-                    errorInv.put("rental_id", rental_id);
-                    errorInv.put("timestamp", Instant.now().getEpochSecond());
-                    kafkaTemplate.send(logging_topic, invoice_unavailable_key, new Gson().toJson(errorInv));
+                    SendMessageToLogging(invoice_unavailable_key, user_id, rental_id);
                     return;
                 }
 

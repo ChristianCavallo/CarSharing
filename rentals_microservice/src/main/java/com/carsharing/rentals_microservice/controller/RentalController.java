@@ -151,6 +151,7 @@ public class RentalController {
             message.put("timestamp", Instant.now().getEpochSecond());
             message.put("user_id", user_id);
             message.put("car_id", car_id);
+            message.put("service", service_name);
             message.put("message", c.getMessage());
             kafkaTemplate.send(logging_topic, rental_car_not_available_key, new Gson().toJson(message));
             throw new ResponseStatusException(
@@ -228,6 +229,7 @@ public class RentalController {
             Map<String, Object> message = new HashMap<>();
             message.put("timestamp", Instant.now().getEpochSecond());
             message.put("user_id", user_id);
+            message.put("service", service_name);
             message.put("car_id", r.get().getCar_id());
             kafkaTemplate.send(logging_topic, rental_car_locking_failure_key, new Gson().toJson(message));
 

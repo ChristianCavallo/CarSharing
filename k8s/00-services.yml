@@ -21,7 +21,7 @@ spec:
   #type: NodePort
   ports:
     - port: 2181
-      targetPort: 2181
+      # targetPort: 2181
       name: zoo-port
   selector:
     app: zookeeper
@@ -33,11 +33,11 @@ metadata:
   labels:
     app: mongo-db
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - name: mongo-port
       port: 27017
-      targetPort: 27017
+      # targetPort: 27017
   selector:
     db: mongo
 ---
@@ -48,10 +48,10 @@ metadata:
   labels:
     name: logging-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2224
-      targetPort: 2224
+      # targetPort: 2224
       name: logging-port
   selector:
       service: logging
@@ -63,10 +63,10 @@ metadata:
   labels:
     name: rentals-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2223
-      targetPort: 2223
+      # targetPort: 2223
       name: rentals-api-port
   selector:
     service: rentals
@@ -78,10 +78,10 @@ metadata:
   labels:
     name: payments-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2222
-      targetPort: 2222
+      # targetPort: 2222
       name: payments-api-port
   selector:
     service: payments
@@ -93,10 +93,10 @@ metadata:
   labels:
     name: users-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2225
-      targetPort: 2225
+      # targetPort: 2225
       name: users-api-port
   selector:
     service: users
@@ -108,10 +108,10 @@ metadata:
   labels:
     name: invoices-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2226
-      targetPort: 2226
+      # targetPort: 2226
       name: invoices-api-port
   selector:
     service: invoices
@@ -123,10 +123,10 @@ metadata:
   labels:
     name: cars-service
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
     - port: 2227
-      targetPort: 2227
+      #targetPort: 2227
       name: cars-api-port
   selector:
     service: cars

@@ -35,18 +35,18 @@ spec:
                 name: logging-config
             - configMapRef:
                 name: common-config
-          startupProbe:
-            httpGet:
-              path: /logging/ping
-              port: 2224
-            initialDelaySeconds: 20
-            failureThreshold: 100
-            periodSeconds: 15
-          livenessProbe:
-            httpGet:
-              path: /logging/ping
-              port: 2224
-            initialDelaySeconds: 60
-            failureThreshold: 100
-            periodSeconds: 15
+          #startupProbe:
+          #  httpGet:
+          #    path: /logging/ping
+          #    port: 2224
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 100
+          #  periodSeconds: 15
+          #livenessProbe:
+          #  httpGet:
+          #    path: /logging/ping
+          #    port: 2224
+          #  initialDelaySeconds: 60
+          #  failureThreshold: 100
+          #  periodSeconds: 15
 

@@ -19,6 +19,17 @@ spec:
           ports:
             - containerPort: 2227
               name: cars-api-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: cars-config

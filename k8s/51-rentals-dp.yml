@@ -14,11 +14,22 @@ spec:
     spec:
       containers:
         - name: rentals-cnt
-          image: carsharing_rentalsmanager
+          image: carsharing_rentals-service
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2223
               name: rentals-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: rentals-config

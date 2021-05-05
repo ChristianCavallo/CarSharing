@@ -108,7 +108,7 @@ public class CarService {
     }
 
     public List<Car> SearchCarsByPosition(String pos) {
-        return repository.findByLocation(pos);
+        return repository.findByLocationAndAndCarStatus(pos, CarStatus.LOCKED);
     }
 
 

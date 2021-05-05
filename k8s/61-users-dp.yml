@@ -19,6 +19,17 @@ spec:
           ports:
             - containerPort: 2225
               name: users-api-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: users-config

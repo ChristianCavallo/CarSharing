@@ -25,27 +25,24 @@ public class KafkaLoggingListener {
     private String http_errors_key;
 
     @KafkaListener(topics = "${kafka_logging_topic}", groupId = "${kafka_logging_group}")
-    public void carRequestsHandler(ConsumerRecord<String, String> data) {
+    public void logsRequestsHandler(ConsumerRecord<String, String> data) {
         Log l = new Log();
         l.setKey(data.key());
         l.setPayload(data.value());
 
-        try{
-            Type type = new TypeToken<Map<String, String>>(){}.getType();
-            Map<String, Object> m = new Gson().fromJson(data.value(), type);
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        Map<String, Object> m = new Gson().fromJson(data.value(), type);
 
-            if(data.key().equals(http_errors_key)){
-                l.setService(m.get("service").toString());
-            }
+        if(m.containsKey("service")){
+            l.setService(m.get("service").toString());
+        } else {
+            l.setService("Unknown");
+        }
 
-            if(m.containsKey("timestamp")){
-                l.setTimestamp(Long.parseLong(m.get("timestamp").toString()));
-            } else {
-                l.setTimestamp(Instant.now().getEpochSecond());
-            }
-
-        }catch(Exception e){
-
+        if(m.containsKey("timestamp")){
+            Double t = Double.parseDouble(m.get("timestamp").toString());
+            System.out.println(t);
+            l.setTimestamp(Double.valueOf(t).longValue());
         }
 
         repository.save(l);

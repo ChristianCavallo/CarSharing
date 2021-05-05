@@ -14,11 +14,22 @@ spec:
     spec:
       containers:
         - name: payments-cnt
-          image: carsharing_paymentsmanager
+          image: carsharing_payments-service
           imagePullPolicy: "Never"
           ports:
             - containerPort: 2222
               name: payments-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: payments-config

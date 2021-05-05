@@ -25,6 +25,9 @@ public class KafkaCarListener {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    @Value("${spring.application.name}")
+    private String service_name;
+
     //kafka_car_topic=car
     @Value("${kafka_car_topic}")
     private String car_topic;
@@ -55,6 +58,7 @@ public class KafkaCarListener {
         message.put("user_id", req.getUser_id());
         message.put("rental_id", req.getRental_id());
         message.put("timestamp", Instant.now().getEpochSecond());
+        message.put("service", service_name);
         message.put("message", res.getMessage());
         message.put("success", res.getSuccess());
 

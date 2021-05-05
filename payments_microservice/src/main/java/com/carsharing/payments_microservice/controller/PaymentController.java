@@ -78,11 +78,11 @@ public class PaymentController {
 
     // POST /ipn
     @PostMapping(path="/ipn", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public @ResponseBody String postIPN(@RequestParam MultiValueMap<String,String> paramMap,
-                                        HttpServletRequest request){
+    public @ResponseBody String postIPN(@RequestParam MultiValueMap<String,String> paramMap){
         System.out.println("New IPN Request: " + paramMap);
 
         Map<String, Object> errorMap = new HashMap<>();
+        errorMap.put("service", service_name);
         errorMap.put("timestamp", Instant.now().getEpochSecond());
         errorMap.putAll(paramMap);
 
