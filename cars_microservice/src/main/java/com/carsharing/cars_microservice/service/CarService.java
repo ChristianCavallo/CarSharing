@@ -77,6 +77,10 @@ public class CarService {
     }
 
     public Car AddCar(Car c) {
+        Optional<Car> c1 = repository.findByCode(c.getCode());
+        if (c1.isPresent()) {
+            return null;
+        }
         return repository.save(c);
     }
 

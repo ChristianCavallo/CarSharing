@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-dp
+spec:
+  selector:
+    matchLabels:
+      service: users
+  template:
+    metadata:
+      name: users-pod
+      labels:
+        service: users
+    spec:
+      containers:
+        - name: users-cnt
+          image: carsharing_users-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2225
+              name: users-api-port
+          envFrom:
+            - configMapRef:
+                name: users-config
+            - configMapRef:
+                name: common-config
+          #startupProbe:
+          #  httpGet:
+          #    path: /user/ping
+          #    port: 2225
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /user/ping
+          #    port: 2225
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+          #livenessProbe:
+          #  httpGet:
+          #    path: /user/ping
+          #    port: 2225
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cars-dp
+spec:
+  selector:
+    matchLabels:
+      service: cars
+  template:
+    metadata:
+      name: cars-pod
+      labels:
+        service: cars
+    spec:
+      containers:
+        - name: cars-cnt
+          image: carsharing_cars-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2227
+              name: cars-api-port
+          envFrom:
+            - configMapRef:
+                name: cars-config
+            - configMapRef:
+                name: common-config
+          #startupProbe:
+          #  httpGet:
+          #    path: /car/ping
+          #    port: 2227
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /car/ping
+          #    port: 2227
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+          #livenessProbe:
+          #  httpGet:
+          #    path: /car/ping
+          #    port: 2227
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+

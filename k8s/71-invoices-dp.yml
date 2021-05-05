@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoices-dp
+spec:
+  selector:
+    matchLabels:
+      service: invoices
+  template:
+    metadata:
+      name: invoices-pod
+      labels:
+        service: invoices
+    spec:
+      containers:
+        - name: invoices-cnt
+          image: carsharing_invoices-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2226
+              name: invoices-api-port
+          envFrom:
+            - configMapRef:
+                name: invoices-config
+            - configMapRef:
+                name: common-config
+          #startupProbe:
+          #  httpGet:
+          #    path: /invoice/ping
+          #    port: 2226
+          #  failureThreshold: 30
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /invoice/ping
+          #    port: 2226
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+          #livenessProbe:
+          #  httpGet:
+          #    path: /invoice/ping
+          #    port: 2226
+          #  initialDelaySeconds: 20
+          #  failureThreshold: 5
+          #  periodSeconds: 5
+

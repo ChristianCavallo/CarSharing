@@ -78,8 +78,15 @@ public class CarController {
         c.setLat(0.0);
         c.setLon(0.0);
         Car car = service.AddCar(c);
-        return new Gson().toJson(c);
 
+        if (car == null) {
+            sendHttpError(servletRequest, "Car already registered.");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Bad Code"
+            );
+        }
+
+        return new Gson().toJson(c);
     }
 
 
