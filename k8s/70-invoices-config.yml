@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: invoices-config
+data:
+  MONGO_DB: "invoices_db"
+  ADMIN_USER_ID: "0"
+
+  PAYMENTS_SERVICE_APP_NAME: "invoices-service"
+  PAYMENTS_SERVICE_APP_PORT: "2226"
+  PAYMENTS_SERVICE_API_BASE: "invoice"

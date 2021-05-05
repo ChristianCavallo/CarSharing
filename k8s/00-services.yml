@@ -89,6 +89,51 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: users-service
+  labels:
+    name: users-service
+spec:
+  type: NodePort
+  ports:
+    - port: 2225
+      targetPort: 2225
+      name: users-api-port
+  selector:
+    service: users
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: invoices-service
+  labels:
+    name: invoices-service
+spec:
+  type: NodePort
+  ports:
+    - port: 2226
+      targetPort: 2226
+      name: invoices-api-port
+  selector:
+    service: invoices
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cars-service
+  labels:
+    name: cars-service
+spec:
+  type: NodePort
+  ports:
+    - port: 2227
+      targetPort: 2227
+      name: cars-api-port
+  selector:
+    service: cars
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: gateway-service
   labels:
     name: gateway-service
