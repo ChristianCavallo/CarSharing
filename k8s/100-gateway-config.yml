@@ -8,3 +8,10 @@ data:
   ENABLE_KUBERNETES_DISCOVERY: "true"
   ENABLE_EUREKA_DISCOVERY: "false"
 
+  JWT_SECRET: "BvPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY"
+
+  OPEN_ENDPOINTS: "/register,/login,/ping,/ipn"
+
+  SERVICES: "users-service,logging-service,cars-service,rentals-service,invoices-service,payments-service"
+  API_SERVICE: "user,logging,car,rental,invoice,payment"
+

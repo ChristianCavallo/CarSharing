@@ -1,7 +1,10 @@
 package com.carsharing.users_microservice.controller;
 
 
+import com.carsharing.users_microservice.entities.AuthResponse;
+import com.carsharing.users_microservice.entities.LoginRequest;
 import com.carsharing.users_microservice.entities.User;
+import com.carsharing.users_microservice.service.AuthService;
 import com.carsharing.users_microservice.service.UserService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class UserController {
 
     @Autowired
     UserService service;
+
+    @Autowired
+    AuthService authService;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -73,10 +79,24 @@ public class UserController {
         User u2 = service.AddUser(u);
 
         kafkaTemplate.send(user_topic, user_registered_key, new Gson().toJson(u2));
-        u2.setPassword("");
 
         return new Gson().toJson(u2);
 
+    }
+
+    @PostMapping(path = "/login")
+    private @ResponseBody
+    AuthResponse login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
+        Optional<User> u = service.getUserByEmailAndPassword(request.getEmail(), request.getPassword());
+
+        if(!u.isPresent()){
+            sendHttpError(servletRequest, 404);
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found."
+            );
+        }
+
+        return authService.getAuthenticationResponse(u.get());
     }
 
     @GetMapping(path = "/id/{id}")
@@ -107,7 +127,7 @@ public class UserController {
             );
         }
 
-        if (user_id != user.get().getId() && !user_id.equals(admin_user_id)) {
+        if (!user.get().getId().equals(user_id) && !user_id.equals(admin_user_id)) {
             sendHttpError(servletRequest, "Unauthorized access.");
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "You don't own this resource."

@@ -15,7 +15,7 @@ services:
     #  - "2222"
     restart: always
     env_file:
-      - ./payments_microservice/payments.env
+      - payments.env
       - commons.env
 
 volumes:

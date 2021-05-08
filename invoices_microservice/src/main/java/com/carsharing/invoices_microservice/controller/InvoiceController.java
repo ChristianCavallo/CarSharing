@@ -60,17 +60,17 @@ public class InvoiceController {
 
         Optional<Invoice> i = service.GetInvoiceById(id);
 
-        if (!user_id.equals(i.get().getUserId()) && !user_id.equals(admin_user_id)) {
-            sendHttpError(servletRequest, "Unauthorized access");
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, ""
-            );
-        }
-
         if (!i.isPresent()) {
             sendHttpError(servletRequest, 404);
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Specified object can't be found."
+            );
+        }
+
+        if (!user_id.equals(i.get().getUserId()) && !user_id.equals(admin_user_id)) {
+            sendHttpError(servletRequest, "Unauthorized access");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, ""
             );
         }
 

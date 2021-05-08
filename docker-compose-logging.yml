@@ -13,7 +13,7 @@ services:
       dockerfile: ./logging_microservice/Dockerfile
     restart: always
     env_file:
-      - ./logging_microservice/logging.env
+      - logging.env
       - commons.env
     #ports:
     #  - "2224"

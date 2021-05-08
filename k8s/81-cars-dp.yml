@@ -35,24 +35,18 @@ spec:
                 name: cars-config
             - configMapRef:
                 name: common-config
-          #startupProbe:
-          #  httpGet:
-          #    path: /car/ping
-          #    port: 2227
-          #  failureThreshold: 30
-          #  periodSeconds: 10
-          #readinessProbe:
-          #  httpGet:
-          #    path: /car/ping
-          #    port: 2227
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 5
-          #  periodSeconds: 5
-          #livenessProbe:
-          #  httpGet:
-          #    path: /car/ping
-          #    port: 2227
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 5
-          #  periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /car/ping
+              port: 2227
+            initialDelaySeconds: 20
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /car/ping
+              port: 2227
+            initialDelaySeconds: 60
+            failureThreshold: 5
+            periodSeconds: 15
 

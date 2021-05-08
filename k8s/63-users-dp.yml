@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-dp
+spec:
+  selector:
+    matchLabels:
+      service: users
+  template:
+    metadata:
+      name: users-pod
+      labels:
+        service: users
+    spec:
+      containers:
+        - name: users-cnt
+          image: carsharing_users-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2225
+              name: users-api-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-auth-secret
+                  key: secret
+            - name: JWT_EXPIRATION
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-auth-secret
+                  key: expiration
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: admin-user-secret
+                  key: admin_username
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: admin-user-secret
+                  key: admin_password
+            - name: ADMIN_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: admin-user-secret
+                  key: admin_id
+
+          envFrom:
+            - configMapRef:
+                name: users-config
+            - configMapRef:
+                name: common-config
+          readinessProbe:
+            httpGet:
+              path: /user/ping
+              port: 2225
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /user/ping
+              port: 2225
+            initialDelaySeconds: 60
+            failureThreshold: 5
+            periodSeconds: 15
+

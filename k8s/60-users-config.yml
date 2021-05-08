@@ -4,8 +4,16 @@ metadata:
   name: users-config
 data:
   MONGO_DB: "users_db"
-  ADMIN_USER_ID: "0"
 
-  PAYMENTS_SERVICE_APP_NAME: "users-service"
-  PAYMENTS_SERVICE_APP_PORT: "2225"
-  PAYMENTS_SERVICE_API_BASE: "user"
+  USERS_SERVICE_APP_NAME: "users-service"
+  USERS_SERVICE_APP_PORT: "2225"
+  USERS_SERVICE_API_BASE: "user"
+
+  # Service variables
+  # ADMIN_USERNAME: "admin"
+  # ADMIN_PASSWORD: "12345"
+  # ADMIN_USER_ID: "0"
+
+  # Jwt Variables
+  # JWT_SECRET: "BvPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY"
+  # JWT_EXPIRATION: "86400"

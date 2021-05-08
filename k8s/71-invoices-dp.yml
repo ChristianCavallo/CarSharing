@@ -35,24 +35,17 @@ spec:
                 name: invoices-config
             - configMapRef:
                 name: common-config
-          #startupProbe:
-          #  httpGet:
-          #    path: /invoice/ping
-          #    port: 2226
-          #  failureThreshold: 30
-          #  periodSeconds: 10
-          #readinessProbe:
-          #  httpGet:
-          #    path: /invoice/ping
-          #    port: 2226
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 5
-          #  periodSeconds: 5
-          #livenessProbe:
-          #  httpGet:
-          #    path: /invoice/ping
-          #    port: 2226
-          #  initialDelaySeconds: 20
-          #  failureThreshold: 5
-          #  periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /invoice/ping
+              port: 2226
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /invoice/ping
+              port: 2226
+            initialDelaySeconds: 60
+            failureThreshold: 5
+            periodSeconds: 15
 
