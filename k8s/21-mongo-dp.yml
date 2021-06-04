@@ -17,10 +17,7 @@ spec:
         - image: mongo
           imagePullPolicy: ""
           name: mongo-db
-          command:
-            - /bin/bash
-            - -c
-            - source docker-entrypoint.sh mongod
+          command: ["/bin/bash","-c",'source docker-entrypoint.sh mongod && mongod "--replSet" rs0 "--smallfiles" "--noprealloc"']
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:

@@ -115,7 +115,7 @@ public class kafkaPaymentListener {
                 Optional<Invoice> i = service.GetInvoice(rental_id, user_id, amount_paid);
 
                 if (i.isPresent()) {
-                    service.UpdateInvoiceStatus(i.get(), InvoiceStatus.ABORT);
+                    service.UpdateInvoiceStatus(i.get(), InvoiceStatus.PENDING);
                 } else {
                     SendMessageToLogging(invoice_unavailable_key, user_id, rental_id);
                     return;
